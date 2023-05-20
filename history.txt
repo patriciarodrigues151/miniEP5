@@ -71,7 +71,7 @@ explicação:
 -v $(pwd)/index.html:/usr/src/pages/index.html: Monta o arquivo index.html do diretório atual no caminho /usr/src/pages/index.html do contêiner. Isso permite que qualquer alteração feita no index.html local seja refletida instantaneamente no contêiner.
 -v $(pwd)/Caddyfile:/usr/src/Caddyfile: Monta o arquivo Caddyfile do diretório atual no caminho /usr/src/Caddyfile do contêiner. Isso permite que você atualize o arquivo Caddyfile local e as alterações sejam aplicadas imediatamente ao contêiner.
 
-Agora não foi mais necessário atualizar a imagem toda vez que ocorresse alguma alteração no arquivo html.
+Agora não é mais necessário atualizar a imagem toda vez que ocorrer alguma alteração no arquivo html.
 
 
 
