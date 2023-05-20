@@ -1,0 +1,81 @@
+o arquivo Dockerfile foi criado contendo o seguinte: 
+
+FROM caddy:latest
+
+COPY index.html /usr/src/pages/index.html
+COPY Caddyfile /usr/src/Caddyfile
+
+Parte I: na pasta /usr/src/pages, estao os arquivos index.html(dado pelo professor), Dockerfile(criado) e Caddyfile(dado pelo professor).
+
+Para construir a imagem, no diretório /usr/src/pages executei como root
+comando: docker build -t custom-caddy:2.5.0-alpine .
+
+
+Parte II: Potencializando nosso Servidor para desenvolvimento
+
+comando: docker run -d -p 8080:80 -v $(pwd):/usr/src/pages --name meu_container caddy:2.4.3-alpine
+
+Explicação dos parâmetros do comando docker run:
+
+-d: Executa o contêiner em segundo plano (detached mode).
+-p 8080:80: Faz o vínculo da porta 8080 do host com a porta 80 do contêiner. Dessa forma, você poderá acessar o servidor HTTP através de http://localhost:8080.
+-v $(pwd):/usr/src/pages: Monta o diretório atual ($(pwd)) na pasta /usr/src/pages do contêiner. Isso permite que os arquivos index.html e Caddyfile sejam acessados pelo contêiner.
+--name meu_container: Define o nome do contêiner como meu_container.
+
+caddy:2.4.3-alpine: Especifica a imagem base do Caddy com a versão 2.4.3 e o sistema operacional Alpine.
+
+comando: docker container ls -a
+
+lista todos os contêineres, incluindo aqueles que estão parados. 
+
+http://localhost:8080/index.html na url, podemos verificar o site hospedado. 
+
+
+Após editar o index.html, parei e removi a execução de um contêiner específico usando
+
+comando: docker container stop <codigo-do-container>
+comando: docker container rm <codigo do container>
+
+
+Depois para verficar 
+
+comando: docker container ls -a
+
+Após isso, crei novamente a imagem usando 
+
+comando: docker image build . -t custom-caddy:2.5.0-alpine
+
+assim o novo codigo html foi atualizado na imagem e ai eu rodei 
+
+comando: docker container run             \
+	--name my-caddy-server         \
+	-p 8080:80                     \
+	-d custom-caddy:2.5.0-alpine
+
+
+Para fazer alterações na sequência de comandos de execução usando volumes do Docker para atualizar as páginas sem precisar construir uma nova imagem ou interromper a execução do contêiner, você pode seguir os seguintes passos:
+
+docker container stop <codigo-do-container>
+docker container rm <codigo-do-container>
+
+docker container run -d \
+--name my-caddy-server \
+-p 8080:80 \
+-v $(pwd)/index.html:/usr/src/pages/index.html \
+-v $(pwd)/Caddyfile:/usr/src/Caddyfile \
+caddy:2.4.3-alpine
+
+
+explicação: 
+
+-v $(pwd)/index.html:/usr/src/pages/index.html: Monta o arquivo index.html do diretório atual no caminho /usr/src/pages/index.html do contêiner. Isso permite que qualquer alteração feita no index.html local seja refletida instantaneamente no contêiner.
+-v $(pwd)/Caddyfile:/usr/src/Caddyfile: Monta o arquivo Caddyfile do diretório atual no caminho /usr/src/Caddyfile do contêiner. Isso permite que você atualize o arquivo Caddyfile local e as alterações sejam aplicadas imediatamente ao contêiner.
+
+Agora não foi mais necessário atualizar a imagem toda vez que ocorresse alguma alteração no arquivo html.
+
+
+
+
+
+
+
